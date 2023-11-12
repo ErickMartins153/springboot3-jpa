@@ -1,9 +1,15 @@
 package com.springproject.course.entities;
 
+import jakarta.persistence.*;
+
 import java.io.Serializable;
 import java.util.Objects;
 
+@Entity
+@Table(name = "tb_user") // a palavra User é reservada na tabela H2, por isso renomeamos
 public class User implements Serializable {
+    @Id //setar quem é a primary key(PK)
+    @GeneratedValue(strategy = GenerationType.IDENTITY) //fazer com que haja autoincremento
     private Long id;
     private String name;
     private String email;

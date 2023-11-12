@@ -10,10 +10,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "/users")
 public class UserResource {
 
-    //um tipo especifico do spring para retornar respostas de requisições web
+
 
     @GetMapping
     public ResponseEntity<User> findAll() {
+        //ResponseEntity é um tipo especifico do spring para
+        // retornar respostas de requisições web
         User user = new User(1L, "Maria", "maria@gmail.com", "99999", "12345");
 
         return ResponseEntity.ok().body(user);
