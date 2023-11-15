@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -20,7 +19,13 @@ public class Product implements Serializable {
     private Double price;
     private String imgUrl;
 
-    @Transient
+    //escolhemos uma das classes e substituimos @Transient por:
+    @ManyToMany
+    @JoinTable(name = "tb_product_category",
+            //nome da chave estrangeira
+            joinColumns = @JoinColumn(name = "product_id"),
+            //definir qual a chave estrangeira da outra entidade, no caso Category, já que estamos em Product
+            inverseJoinColumns = @JoinColumn(name = "category_id"))
     private Set<Category> categories = new HashSet<>();
 
     public Product() {
