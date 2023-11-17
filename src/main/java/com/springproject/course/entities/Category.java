@@ -18,7 +18,7 @@ public class Category implements Serializable {
 
     //uma category pode ter vários produtos
     //antes tinhamos @Transient aqui e em Product, mudamos lá para uma coisa e aqui para outra
-    @JsonIgnore
+    @JsonIgnore //pra remover o looping no json de product chamar category, que contem o product, que contem category...
     @ManyToMany(mappedBy = "categories") //categories é o nome do set definido em Products
     private Set<Product> products = new HashSet<>();
 

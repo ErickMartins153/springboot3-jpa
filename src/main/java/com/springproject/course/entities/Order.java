@@ -1,12 +1,16 @@
 package com.springproject.course.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.springproject.course.entities.enums.OrderStatus;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
+
 @Entity
 @Table(name = "tb_order") //Order é uma palavra reservada do SQL, por isso dá erro caso não mudemos o nome
 public class Order implements Serializable {
@@ -24,6 +28,9 @@ public class Order implements Serializable {
     @ManyToOne //pois um cliente pode ter muitos pedidos
     @JoinColumn(name = "client_id") // client_id será a foreign key
     private User client;
+
+    @OneToMany(mappedBy = "id.order") //no OrderItem tem-se o id composto que possui o pedido
+    private Set<OrderItem> items = new HashSet<>();
 
     public Order() {}
 
@@ -67,6 +74,12 @@ public class Order implements Serializable {
             this.orderStatus = orderStatus.getCode();
         }
     }
+
+    public Set<OrderItem> getItems() {
+        return items;
+    }
+
+
 
     @Override
     public boolean equals(Object o) {
