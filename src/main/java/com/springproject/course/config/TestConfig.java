@@ -66,6 +66,7 @@ public class TestConfig implements CommandLineRunner {
         User u2 = new User(null, "Alex Green", "alex@gmail.com", "977777777", "123456");
 
         Order o1 = new Order(null, Instant.parse("2019-06-20T19:53:07Z"), OrderStatus.PAID, u1);
+        //o1 tem status pago, então iremos atribuir um Payment para ele, na linha 83
         Order o2 = new Order(null, Instant.parse("2019-07-21T03:42:10Z"), OrderStatus.WAITING_PAYMENT,u2);
         Order o3 = new Order(null, Instant.parse("2019-07-22T15:21:22Z"), OrderStatus.WAITING_PAYMENT, u1);
 
@@ -78,5 +79,12 @@ public class TestConfig implements CommandLineRunner {
         OrderItem oi4 = new OrderItem(o3, p5, 2, p5.getPrice());
 
         orderItemRepository.saveAll(Arrays.asList(oi1,oi2,oi3,oi4));
+
+        Payment pay1 = new Payment(null,Instant.parse("2019-06-20T21:53:07Z"), o1);
+        //vamos supor que o payment foi realizado 2h após o pedido
+        //para salvar um objeto dependente em uma relação 1to1 não chamaremos o repository do próprio objeto
+        //faremos o seguinte:
+        o1.setPayment(pay1); //associamos assim o o1 com pay1, e salvaremos o Order novamente, o payment vai por tabela
+        orderRepository.save(o1);
     }
 }

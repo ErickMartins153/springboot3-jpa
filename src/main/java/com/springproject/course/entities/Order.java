@@ -31,6 +31,12 @@ public class Order implements Serializable {
     @OneToMany(mappedBy = "id.order") //no OrderItem tem-se o id composto que possui o pedido
     private Set<OrderItem> items = new HashSet<>();
 
+    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)//nome do atributo na classe Payment, por ser 1to1
+    // temos que colocar outro atributo
+    // por ser 1to1 estamos mapeando as duas entidades para ter o mesmo Id, se o pedido for código 5,
+    // o pagamento também. E nesse caso é obrigatório colocarmos o cascade
+    private Payment payment;
+
     public Order() {}
 
     public Order(Long id, Instant moment, OrderStatus orderStatus, User client) {
@@ -74,11 +80,17 @@ public class Order implements Serializable {
         }
     }
 
+    public Payment getPayment() {
+        return payment;
+    }
+
+    public void setPayment(Payment payment) {
+        this.payment = payment;
+    }
+
     public Set<OrderItem> getItems() {
         return items;
     }
-
-
 
     @Override
     public boolean equals(Object o) {
