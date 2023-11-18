@@ -1,5 +1,6 @@
 package com.springproject.course.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
@@ -17,6 +18,7 @@ public class Payment implements Serializable {
     //associação 1 para 1, pelo uml vemos que o pagamento é a classe dependente, pois o pagamento
     //tem associação 0...1 ou seja, a Order pode existir sem um pagamento, então faremos o seguinte
     //na classe dependente:
+    @JsonIgnore
     @OneToOne
     @MapsId
     private Order order;

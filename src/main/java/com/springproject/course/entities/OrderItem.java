@@ -62,6 +62,12 @@ public class OrderItem implements Serializable {
         this.price = price;
     }
 
+    //na plataforma java enterprise o que vale é o get, então para o resultado
+    //aparecer no JSON, ele precisa começar com get
+    public Double getSubTotal() {
+        return price * quantity;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
