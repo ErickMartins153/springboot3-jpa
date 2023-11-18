@@ -2,6 +2,7 @@ package com.springproject.course.services;
 
 import com.springproject.course.entities.User;
 import com.springproject.course.repositories.UserRepository;
+import com.springproject.course.services.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +24,11 @@ public class UserService {
 
     public User findById(Long id) {
         Optional<User> obj = repository.findById(id);
-        return obj.get(); //vai retornar o objeto do tipo User que estiver dentro
+        return obj.orElseThrow(() -> new ResourceNotFoundException(id));//substituimos o .get por esse metodo, que basicamente tenta dar o get
+        //mas caso não consiga dá throw nessa exception
+
+
+        //return obj.get(); //vai retornar o objeto do tipo User que estiver dentro
         //do Optional
     }
 
