@@ -4,6 +4,7 @@ import com.springproject.course.entities.User;
 import com.springproject.course.repositories.UserRepository;
 import com.springproject.course.services.exceptions.DatabaseException;
 import com.springproject.course.services.exceptions.ResourceNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -59,9 +60,13 @@ public class UserService {
         //pelo jpa, pra ser trabalhado e em seguida poder sofrer alguma operação com DB
         //é melhor que o findById pois o findbyid obrigatoriamente vai no DB e pega o objeto
         //o getReference é mais eficiente
-        User entity = repository.getReferenceById(id);
-        updateData(entity, obj);
-        return repository.save(entity);
+        try {
+            User entity = repository.getReferenceById(id);
+            updateData(entity, obj);
+            return repository.save(entity);
+        } catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException(id);
+        }
     }
 
     private void updateData(User entity, User obj) {
