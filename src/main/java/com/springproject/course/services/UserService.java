@@ -2,8 +2,11 @@ package com.springproject.course.services;
 
 import com.springproject.course.entities.User;
 import com.springproject.course.repositories.UserRepository;
+import com.springproject.course.services.exceptions.DatabaseException;
 import com.springproject.course.services.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -39,7 +42,16 @@ public class UserService {
     }
 
     public void delete(Long id) {
-        repository.deleteById(id);
+        try {
+            repository.deleteById(id);
+        } catch (EmptyResultDataAccessException e) {
+            //colocamos esse erro mais generico pois qualquer erro de erro de execução
+            //será englobada por ela, depois rodamos e vimos qual erro exatamente era retornado
+            //ai vimos que é a EmptyResultDataAccessException
+            throw new ResourceNotFoundException(id);
+        } catch (DataIntegrityViolationException e) {
+            throw new DatabaseException(e.getMessage());
+        }
     }
 
     public User update(Long id, User obj) {
