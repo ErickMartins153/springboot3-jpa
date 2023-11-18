@@ -36,4 +36,25 @@ public class UserService {
     public void delete(Long id) {
         repository.deleteById(id);
     }
+
+    public User update(Long id, User obj) {
+        //getReferenceById instancia o usuário, mas sem ir no DB, ele só deixa o objeto monitorado
+        //pelo jpa, pra ser trabalhado e em seguida poder sofrer alguma operação com DB
+        //é melhor que o findById pois o findbyid obrigatoriamente vai no DB e pega o objeto
+        //o getReference é mais eficiente
+        User entity = repository.getReferenceById(id);
+        updateData(entity, obj);
+        return repository.save(entity);
+    }
+
+    private void updateData(User entity, User obj) {
+        //atualizar os dados do entity baseado com o que está em obj
+        entity.setName(obj.getName());
+        entity.setEmail(obj.getEmail());
+        entity.setPhone(obj.getPhone());
+        //nem todos os campos poderão ser atualizados por aqui, ex: id,senha , atentar a isso!!
+
+    }
+
+
 }
