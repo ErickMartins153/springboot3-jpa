@@ -4,11 +4,10 @@ import com.springproject.course.entities.User;
 import com.springproject.course.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -34,5 +33,21 @@ public class UserResource {
         User obj = service.findById(id);
 
         return ResponseEntity.ok().body(obj);
+    }
+
+    @PostMapping
+    public ResponseEntity<User> insert(@RequestBody User obj) {
+        //pra dizer que o obj vai chegar como JSON e precisará ser deserializado para um obj User do java
+        //precisamos usar a annotation @RequestBody
+        obj = service.insert(obj);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}").buildAndExpand(obj.getId()).toUri();
+        return ResponseEntity.created(uri).body(obj);
+        //quando usamos o .ok() retornamos o valor 200 OK
+        //mas para inserção em um DB, o correto seria retornar 201
+        //para fazer isso precisamos usar o método created() que espera um URI
+        //para gerar essa location URI faremos a seguinte uri
+        // o objeto URI pega a location do request atual, pelo path usando o id do objeto que acabou de ser inserido
+        //no insomnia assim que fazemos o post, ao ir em headers vemos o Location com o value sendo o caminho
+        // do recurso
     }
 }
