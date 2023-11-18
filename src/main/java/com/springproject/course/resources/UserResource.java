@@ -34,7 +34,6 @@ public class UserResource {
 
         return ResponseEntity.ok().body(obj);
     }
-
     @PostMapping
     public ResponseEntity<User> insert(@RequestBody User obj) {
         //pra dizer que o obj vai chegar como JSON e precisará ser deserializado para um obj User do java
@@ -50,4 +49,16 @@ public class UserResource {
         //no insomnia assim que fazemos o post, ao ir em headers vemos o Location com o value sendo o caminho
         // do recurso
     }
+
+    @DeleteMapping (value = "/{id}")
+    public ResponseEntity<Void> delete (@PathVariable Long id) {
+        //void pois a resposta dessa requisição não retorna nenhum Body
+        service.delete(id);
+        return ResponseEntity.noContent().build();
+        //noContent retorna uma resposta vazia com código 204, que representa a ausência de conteudo
+        //se tentarmos, por exemplo, deletar o usuário 1 receberemos o código 500, e isso acontece
+        //pois o usuário id 1 possui pedidos associados à ele, e isso quebraria a integridade do DB
+        //depois trataremos isso
+    }
+
 }
